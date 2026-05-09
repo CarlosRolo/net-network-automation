@@ -1,0 +1,17 @@
+---
+- name: Backup running configurations
+  hosts: all
+  gather_facts: false
+  connection: network_cli
+
+  tasks:
+    - name: Get running config
+      cisco.ios.ios_command:
+        commands: show running-config
+      register: running_config
+
+    - name: Save backup locally
+      copy:
+        content: "{{ running_config.stdout[0] }}"
+        dest: "../../backup/{{ inventory_hostname }}_ansible_backup.cfg"
+      delegate_to: localhost

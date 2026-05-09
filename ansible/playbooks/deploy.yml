@@ -1,0 +1,31 @@
+---
+- name: Deploy network configuration to Cisco IOS devices
+  hosts: all
+  gather_facts: false
+  connection: network_cli
+
+  vars:
+    ospf_process: 1
+    ospf_area: 0
+
+  tasks:
+    - name: Verify device connectivity
+      cisco.ios.ios_command:
+        commands: show version
+      register: version_output
+
+    - name: Configure hostname
+      cisco.ios.ios_config:
+        lines:
+          - hostname {{ inventory_hostname }}
+
+    - name: Deploy OSPF on routers
+      cisco.ios.ios_config:
+        lines:
+          - router ospf {{ ospf_process }}
+          - network 192.168.100.0 0.0.0.255 area {{ ospf_area }}
+      when: inventory_hostname in groups['routers']
+
+    - name: Save running config
+      cisco.ios.ios_command:
+        commands: write memory
