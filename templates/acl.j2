@@ -1,0 +1,5 @@
+ip access-list extended ACL_MGMT
+ permit tcp 192.168.100.0 0.0.0.255 any eq 22
+ permit icmp 192.168.100.0 0.0.0.255 any
+ deny ip any any log
+!

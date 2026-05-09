@@ -1,0 +1,8 @@
+hostname {{ hostname }}
+!
+router ospf {{ ospf_process }}
+ router-id {{ router_id }}
+ network {{ network }} {{ wildcard }} area {{ area }}
+ passive-interface default
+ no passive-interface GigabitEthernet0/0
+!
